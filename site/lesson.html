@@ -1700,6 +1700,7 @@
         });
       }
 
+      var pendingScrollY = 0;
       var params = new URLSearchParams(window.location.search);
       var lessonPath = params.get('path');
 
@@ -1780,6 +1781,7 @@
           currentLang = currentLang === 'zh' ? 'en' : 'zh';
           localStorage.setItem('aifs-lang', currentLang);
           updateLangUI();
+          pendingScrollY = window.scrollY;
           document.getElementById('lessonContent').innerHTML = '<div class="lesson-loading"><div class="spinner"></div><div class="lesson-loading-text">Loading lesson...</div></div>';
           fetchLesson(lessonPath, currentLang);
         });
@@ -1916,6 +1918,13 @@
               console.error('renderLesson failed', err);
               showError('Render error', 'Loaded the lesson markdown but failed to render it. Details in the browser console.');
               return;
+            }
+            if (pendingScrollY > 0) {
+              var targetY = pendingScrollY;
+              pendingScrollY = 0;
+              requestAnimationFrame(function () {
+                window.scrollTo(0, targetY);
+              });
             }
             fetch(quizUrl)
               .then(function (res) { return res.ok ? res.json() : null; })
