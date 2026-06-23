@@ -22,6 +22,8 @@ const SITE_ORIGIN = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL
   : (process.env.CF_PAGES_URL || 'https://ai-engineering-from-scratch-ebon.vercel.app');
 
+const SUPPORTED_LOCALES = ['en', 'zh']; // en is canonical, rest are translations
+
 // GITHUB_BASE lesson url -> site path "phases/<phase>/<lesson>"
 function lessonPath(url) {
   if (!url) return null;
@@ -232,9 +234,9 @@ function parseReadme(content, roadmapStatuses) {
   return phases;
 }
 
-// ─── Extract lesson summary + keywords from docs/en.md ───────────────
+// ─── Extract lesson summary + keywords from docs/{locale}.md ─────────
 /**
- * Single-pass read of a lesson's docs/en.md.
+ * Single-pass read of a lesson's docs/{locale}.md.
  *
  * Returns:
  *   summary  — first `> blockquote` line (the lesson's one-liner motto).
@@ -242,14 +244,18 @@ function parseReadme(content, roadmapStatuses) {
  *              H3 headings are the densest vocabulary in a lesson doc
  *              (e.g. "Scaled dot-product · Causal masking · KV cache"),
  *              so they extend search coverage without bloating data.js.
+ *   exists   — true when the locale doc file is present on disk.
  *
- * Both fields are empty strings when the file is absent or has no
+ * All fields are empty strings when the file is absent or has no
  * matching content — expected for planned lessons with no docs yet.
  */
-function extractLessonMeta(relPath) {
-  const docPath = path.join(REPO_ROOT, relPath, 'docs', 'en.md');
-  const result = { summary: '', keywords: '' };
+function extractLessonMeta(relPath, locale) {
+  locale = locale || 'en';
+  const docPath = path.join(REPO_ROOT, relPath, 'docs', locale + '.md');
+  const result = { summary: '', keywords: '', exists: false };
   try {
+    if (!fs.existsSync(docPath)) return result;
+    result.exists = true;
     const lines = fs.readFileSync(docPath, 'utf8').split(/\r?\n/);
     const h3s = [];
     for (const raw of lines) {
@@ -438,15 +444,20 @@ function build() {
   console.log('🔍 Discovering outputs + Phase 14 missions...');
   const artifacts = discoverArtifacts();
 
-  console.log('📚 Extracting lesson summaries + keywords from docs/en.md...');
+  console.log('📚 Extracting lesson summaries + keywords from docs/{en,zh}.md...');
   let summarized = 0, withKeywords = 0;
   for (const phase of phases) {
     for (const lesson of phase.lessons) {
       if (lesson.url) {
         const relPath = lesson.url.replace(GITHUB_BASE, '').replace(/\/+$/, '');
-        const meta = extractLessonMeta(relPath);
+        const meta = extractLessonMeta(relPath, 'en');
         if (meta.summary)  { lesson.summary  = meta.summary;  summarized++;   }
         if (meta.keywords) { lesson.keywords = meta.keywords; withKeywords++; }
+
+        const zhMeta = extractLessonMeta(relPath, 'zh');
+        lesson.has_zh = zhMeta.exists;
+        if (zhMeta.summary)  { lesson.summary_zh  = zhMeta.summary;  }
+        if (zhMeta.keywords) { lesson.keywords_zh = zhMeta.keywords; }
       }
     }
   }

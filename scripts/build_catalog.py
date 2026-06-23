@@ -173,6 +173,7 @@ def build_lesson_entry(lesson_dir: Path) -> dict[str, object] | None:
     num = int(match.group(1))
     slug = match.group(2)
     docs_path = lesson_dir / "docs" / "en.md"
+    docs_zh_path = lesson_dir / "docs" / "zh.md"
     code_dir = lesson_dir / "code"
     outputs_dir = lesson_dir / "outputs"
     notebook_dir = lesson_dir / "notebook"
@@ -189,6 +190,7 @@ def build_lesson_entry(lesson_dir: Path) -> dict[str, object] | None:
         "title": title,
         "path": lesson_dir.relative_to(ROOT).as_posix(),
         "has_docs": has_docs,
+        "has_docs_zh": docs_zh_path.is_file(),
         "has_code": code_dir.is_dir(),
         "has_quiz": quiz_path.is_file(),
         "has_notebook": notebook_dir.is_dir(),

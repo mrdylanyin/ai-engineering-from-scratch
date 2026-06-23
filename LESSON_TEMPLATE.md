@@ -14,7 +14,8 @@ NN-lesson-name/
 ├── notebook/
 │   └── lesson.ipynb       (Jupyter notebook for experimentation)
 ├── docs/
-│   └── en.md              (lesson documentation)
+│   └── en.md              (lesson documentation — required)
+│   └── zh.md              (Chinese translation — optional, same structure)
 └── outputs/
     ├── prompt-*.md         (prompts produced by this lesson)
     └── skill-*.md          (skills produced by this lesson)

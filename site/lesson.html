@@ -1596,6 +1596,9 @@
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button">
         <span class="theme-icon" id="themeIcon">N</span>
       </button>
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language" type="button" style="display:none">
+        <span class="lang-icon" id="langIcon">中</span>
+      </button>
     </div>
   </header>
 
@@ -1751,7 +1754,43 @@
       buildSidebar();
       initSidebarToggle();
       initScrollProgress();
-      fetchLesson(lessonPath);
+
+      var currentLang = params.get('lang') || localStorage.getItem('aifs-lang') || 'en';
+      if (currentLang !== 'en' && currentLang !== 'zh') currentLang = 'en';
+
+      var currentLessonHasZh = false;
+      if (currentPhaseIndex >= 0 && currentLessonIndex >= 0) {
+        var cur = flatLessons[currentLessonIndex];
+        var curPhase = PHASES[currentPhaseIndex];
+        if (curPhase && curPhase.lessons && curPhase.lessons[cur.lessonIndex]) {
+          currentLessonHasZh = !!curPhase.lessons[cur.lessonIndex].has_zh;
+        }
+      }
+
+      if (currentLang !== 'en' && !currentLessonHasZh) {
+        currentLang = 'en';
+      }
+
+      var langToggle = document.getElementById('langToggle');
+      var langIcon = document.getElementById('langIcon');
+      if (langToggle && currentLessonHasZh) {
+        langToggle.style.display = '';
+        updateLangUI();
+        langToggle.addEventListener('click', function () {
+          currentLang = currentLang === 'zh' ? 'en' : 'zh';
+          localStorage.setItem('aifs-lang', currentLang);
+          updateLangUI();
+          document.getElementById('lessonContent').innerHTML = '<div class="lesson-loading"><div class="spinner"></div><div class="lesson-loading-text">Loading lesson...</div></div>';
+          fetchLesson(lessonPath, currentLang);
+        });
+      }
+
+      function updateLangUI() {
+        if (langIcon) langIcon.textContent = currentLang === 'zh' ? 'EN' : '中';
+        if (langToggle) langToggle.setAttribute('aria-label', currentLang === 'zh' ? 'Switch to English' : '切换为中文');
+      }
+
+      fetchLesson(lessonPath, currentLang);
 
       function extractPhaseSlug(phase, index) {
         if (phase.url) {
@@ -1851,20 +1890,25 @@
         }, { passive: true });
       }
 
-      function fetchLesson(path) {
-        // Fetch docs from the branch this site was built from (set by build.js
-        // via build-meta.js), so PR preview deploys render their own lesson
-        // edits instead of always pulling main. Falls back to main.
+      function fetchLesson(path, lang) {
+        lang = lang || 'en';
         var ref = (typeof window !== 'undefined' && window.__AIFS_REF) ? window.__AIFS_REF : 'main';
         var base = 'https://raw.githubusercontent.com/mrdylanyin/ai-engineering-from-scratch/' + ref + '/';
-        var rawUrl = base + path + '/docs/en.md';
+        var rawUrl = base + path + '/docs/' + lang + '.md';
+        var fallbackUrl = lang !== 'en' ? (base + path + '/docs/en.md') : null;
         var quizUrl = base + path + '/quiz.json';
 
-        fetch(rawUrl)
-          .then(function (res) {
-            if (!res.ok) throw new Error('fetch-failed');
+        function load(url, fallback) {
+          return fetch(url).then(function (res) {
+            if (!res.ok) {
+              if (fallback) return load(fallback, null);
+              throw new Error('fetch-failed');
+            }
             return res.text();
-          })
+          });
+        }
+
+        load(rawUrl, fallbackUrl)
           .then(function (md) {
             try {
               renderLesson(md);

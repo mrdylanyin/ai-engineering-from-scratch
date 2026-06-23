@@ -44,6 +44,7 @@ scripts/                      # automation
 5. **Original implementations only.** Don't cite external curriculum repos in docs, code comments, or commit text. Cite RFCs, official specs, and academic papers when they are the canonical source.
 6. **Dependency allowlist** (see `Dependencies` below). Stdlib-first.
 7. **Never commit generated files**: `catalog.json` is gitignored, `site/data.js` is rebuilt by CI, `package-lock.json` is never tracked.
+8. **Docs translations live as `docs/{locale}.md`.** `docs/en.md` is the canonical source and always required. Translations (e.g. `docs/zh.md`) use the same frontmatter + section structure but translate content, not code. Only commit translations you or a trusted reviewer can verify.
 
 ---
 

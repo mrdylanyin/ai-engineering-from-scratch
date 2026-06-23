@@ -33,6 +33,7 @@ CODE_IGNORED_NAMES = {"README.md", "AGENTS.md", ".gitkeep", ".DS_Store"}
 MIN_DOC_BYTES = 200
 MAX_OPTIONS = 6
 MIN_OPTIONS = 2
+SUPPORTED_DOC_LOCALES = ["en", "zh"]
 
 
 @dataclass
@@ -94,26 +95,43 @@ def check_lesson_dir_pattern(audit: Audit, lesson: Path) -> bool:
     return True
 
 
-def check_docs_en_md(audit: Audit, lesson: Path) -> str | None:
-    doc = lesson / "docs" / "en.md"
+def _validate_doc_file(
+    audit: Audit, lesson: Path, doc: Path, rule_base: str
+) -> str | None:
     if not doc.is_file():
-        audit.add("L002", lesson, doc, "missing docs/en.md")
         return None
     try:
         text = doc.read_text(encoding="utf-8")
     except UnicodeDecodeError:
-        audit.add("L002", lesson, doc, "docs/en.md is not valid UTF-8")
+        audit.add(rule_base, lesson, doc, f"{doc.name} is not valid UTF-8")
         return None
     if len(text.encode("utf-8")) < MIN_DOC_BYTES:
         audit.add(
             "L003",
             lesson,
             doc,
-            f"docs/en.md shorter than {MIN_DOC_BYTES} bytes (got {len(text)})",
+            f"{doc.name} shorter than {MIN_DOC_BYTES} bytes (got {len(text)})",
         )
     if not H1_RE.search(text):
-        audit.add("L004", lesson, doc, "docs/en.md missing top-level H1")
+        audit.add("L004", lesson, doc, f"{doc.name} missing top-level H1")
     return text
+
+
+def check_docs(audit: Audit, lesson: Path) -> str | None:
+    docs_dir = lesson / "docs"
+    en_doc = docs_dir / "en.md"
+    if not en_doc.is_file():
+        audit.add("L002", lesson, en_doc, "missing docs/en.md")
+    en_text = _validate_doc_file(audit, lesson, en_doc, "L002")
+
+    for locale in SUPPORTED_DOC_LOCALES:
+        if locale == "en":
+            continue
+        loc_doc = docs_dir / f"{locale}.md"
+        if loc_doc.is_file():
+            _validate_doc_file(audit, lesson, loc_doc, "L011")
+
+    return en_text
 
 
 def check_code_main(audit: Audit, lesson: Path) -> None:
@@ -194,7 +212,8 @@ def check_quiz(audit: Audit, lesson: Path) -> None:
 
 
 def check_internal_links(audit: Audit, lesson: Path, text: str) -> None:
-    doc = lesson / "docs" / "en.md"
+    docs_dir = lesson / "docs"
+    doc = docs_dir / "en.md" if (docs_dir / "en.md").is_file() else docs_dir / "zh.md"
     seen: set[str] = set()
     for match in MD_LINK_RE.finditer(text):
         href = match.group(1).strip()
@@ -215,7 +234,7 @@ def audit_lesson(audit: Audit, lesson: Path) -> None:
     audit.lessons_checked += 1
     if not check_lesson_dir_pattern(audit, lesson):
         return
-    text = check_docs_en_md(audit, lesson)
+    text = check_docs(audit, lesson)
     check_code_main(audit, lesson)
     check_quiz(audit, lesson)
     if text is not None:
