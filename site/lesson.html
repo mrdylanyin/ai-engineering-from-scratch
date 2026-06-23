@@ -1597,7 +1597,7 @@
         <span class="theme-icon" id="themeIcon">N</span>
       </button>
       <button class="lang-toggle" id="langToggle" aria-label="Switch language" type="button" style="display:none">
-        <span class="lang-icon" id="langIcon">中</span>
+        <span class="lang-icon" id="langIconEl">中</span>
       </button>
     </div>
   </header>
@@ -1772,7 +1772,7 @@
       }
 
       var langToggle = document.getElementById('langToggle');
-      var langIcon = document.getElementById('langIcon');
+      var langIconEl = document.getElementById('langIconEl');
       if (langToggle && currentLessonHasZh) {
         langToggle.style.display = '';
         updateLangUI();
@@ -1786,7 +1786,7 @@
       }
 
       function updateLangUI() {
-        if (langIcon) langIcon.textContent = currentLang === 'zh' ? 'EN' : '中';
+        if (langIconEl) langIconEl.textContent = currentLang === 'zh' ? 'EN' : '中';
         if (langToggle) langToggle.setAttribute('aria-label', currentLang === 'zh' ? 'Switch to English' : '切换为中文');
       }
 
