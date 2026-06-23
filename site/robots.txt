@@ -133,4 +133,4 @@ Disallow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://aiengineeringfromscratch.com/sitemap.xml
+Sitemap: https://ai-engineering-from-scratch.pages.dev/sitemap.xml
