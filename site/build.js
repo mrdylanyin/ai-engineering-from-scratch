@@ -18,7 +18,9 @@ const GLOSSARY_PATH = path.join(REPO_ROOT, 'glossary', 'terms.md');
 const OUTPUT_PATH = path.join(__dirname, 'data.js');
 
 const GITHUB_BASE = 'https://github.com/mrdylanyin/ai-engineering-from-scratch/tree/main/';
-const SITE_ORIGIN = process.env.CF_PAGES_URL || 'https://ai-engineering-from-scratch.pages.dev';
+const SITE_ORIGIN = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL
+  : (process.env.CF_PAGES_URL || 'https://ai-engineering-from-scratch-ebon.vercel.app');
 
 // GITHUB_BASE lesson url -> site path "phases/<phase>/<lesson>"
 function lessonPath(url) {
