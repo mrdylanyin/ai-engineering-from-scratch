@@ -1,37 +1,37 @@
 [
   {
-    "question": "What problem do embeddings solve that keyword search cannot?",
-    "options": ["Embeddings are faster", "Embeddings capture semantic meaning, matching 'payment didn't go through' with 'charge was declined' even though they share no words", "Embeddings use less storage", "Embeddings work offline"],
+    "question": "嵌入（Embedding）解决了关键词搜索无法解决的什么问题？",
+    "options": ["嵌入更快", "嵌入捕捉语义含义，将'支付没有成功'与'交易被拒绝'匹配，即使它们没有共同的词汇", "嵌入使用更少的存储空间", "嵌入可以离线工作"],
     "correct": 1,
-    "explanation": "Keyword search treats words as independent symbols. Embeddings map text to high-dimensional vectors where semantic similarity = geometric proximity. Texts with the same meaning cluster together regardless of word choice.",
+    "explanation": "关键词搜索将单词视为独立的符号。嵌入将文本映射到高维向量，其中语义相似性 = 几何接近度。含义相同的文本会聚集在一起，无论词语选择如何。",
     "stage": "pre"
   },
   {
-    "question": "What does cosine similarity measure between two embedding vectors?",
-    "options": ["The Euclidean distance", "The angle between the vectors, indicating how similar their directions are regardless of magnitude", "The sum of their components", "The number of matching dimensions"],
+    "question": "余弦相似度（cosine similarity）测量两个嵌入向量之间的什么？",
+    "options": ["欧几里得距离", "向量之间的角度，表示它们方向上的相似程度，不考虑幅度", "它们的分量之和", "匹配维度的数量"],
     "correct": 1,
-    "explanation": "Cosine similarity = dot(A,B) / (|A|*|B|). It ranges from -1 (opposite) to 1 (identical direction). Two texts with the same meaning will have vectors pointing in nearly the same direction, giving cosine similarity near 1.",
+    "explanation": "余弦相似度 = dot(A,B) / (|A|*|B|)。范围从 -1（相反）到 1（相同方向）。含义相同的文本的向量将指向几乎相同的方向，余弦相似度接近 1。",
     "stage": "pre"
   },
   {
-    "question": "What is the typical dimensionality of modern text embedding models?",
-    "options": ["2-10 dimensions", "50-100 dimensions", "768-3072 dimensions", "100,000+ dimensions"],
+    "question": "现代文本嵌入模型的典型维度是多少？",
+    "options": ["2-10 维", "50-100 维", "768-3072 维", "100,000+ 维"],
     "correct": 2,
-    "explanation": "Modern embedding models (OpenAI text-embedding-3, BGE, E5) produce vectors with 768 to 3072 dimensions. Higher dimensions capture more nuance but cost more to store and search.",
+    "explanation": "现代嵌入模型（OpenAI text-embedding-3、BGE、E5）产生 768 到 3072 维的向量。更高的维度捕获更多细微差别，但存储和搜索成本更高。",
     "stage": "post"
   },
   {
-    "question": "Why should you evaluate embedding quality using retrieval benchmarks rather than just inspecting similarity scores?",
-    "options": ["Similarity scores are always wrong", "Absolute similarity values vary by model; what matters is whether relevant documents rank higher than irrelevant ones (precision@k, recall)", "Retrieval benchmarks are faster", "Similarity scores don't use cosine distance"],
+    "question": "为什么应该使用检索基准（retrieval benchmarks）评估嵌入质量，而不是仅仅检查相似性得分？",
+    "options": ["相似性得分总是错误的", "绝对相似性值因模型而异；真正重要的是相关文档是否比不相关文档排名更高（precision@k、recall）", "检索基准更快", "相似性得分不使用余弦距离"],
     "correct": 1,
-    "explanation": "A cosine similarity of 0.85 might mean 'very similar' for one model and 'somewhat similar' for another. Retrieval metrics (precision@k, recall) measure what actually matters: does the right document come back?",
+    "explanation": "0.85 的余弦相似度可能对某个模型意味着'非常相似'，对另一个模型意味着'有些相似'。检索指标（precision@k、recall）测量真正重要的东西：是否返回了正确的文档？",
     "stage": "post"
   },
   {
-    "question": "When would you use a local/open-source embedding model instead of an API-based one?",
-    "options": ["Local models are always better", "When you need data privacy, offline operation, lower cost at scale, or domain-specific fine-tuning", "Local models produce higher quality embeddings", "API models don't support batching"],
+    "question": "何时应该使用本地/开源的嵌入模型而非基于 API 的模型？",
+    "options": ["本地模型总是更好", "当需要数据隐私、离线操作、大规模低成本或特定领域微调时", "本地模型产生更高质量的嵌入", "API 模型不支持批处理"],
     "correct": 1,
-    "explanation": "API embeddings (OpenAI, Cohere) are easy but send your data externally. Local models (BGE, E5, Nomic) keep data private, eliminate per-call costs at scale, and can be fine-tuned on domain-specific data.",
+    "explanation": "API 嵌入（OpenAI、Cohere）容易使用，但会将数据发送到外部。本地模型（BGE、E5、Nomic）保护数据隐私，在大规模时消除每次调用的成本，并且可以在特定领域数据上微调。",
     "stage": "post"
   }
 ]

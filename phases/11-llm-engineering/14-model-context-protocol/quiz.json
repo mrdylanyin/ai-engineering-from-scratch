@@ -1,34 +1,34 @@
 {
   "lesson": "14-model-context-protocol",
-  "title": "Model Context Protocol",
+  "title": "模型上下文协议",
   "questions": [
     {
       "stage": "post",
-      "question": "What three primitives does an MCP server expose?",
+      "question": "MCP 服务器暴露哪三种原语？",
       "options": [
-        "Functions, types, classes",
-        "Tools, resources, prompts",
-        "Endpoints, webhooks, queues",
-        "Agents, skills, workflows"
+        "函数、类型、类",
+        "工具、资源、提示",
+        "端点、Webhook、队列",
+        "代理、技能、工作流"
       ],
       "correct": 1,
-      "explanation": ""
+      "explanation": "MCP 服务器的三个原语是工具（Tools，模型可调用的函数）、资源（Resources，只读内容）和提示（Prompts，用户可调用的模板）。"
     },
     {
       "stage": "post",
-      "question": "What wire format does MCP use?",
+      "question": "MCP 使用什么通信格式？",
       "options": [
-        "GraphQL over HTTP",
-        "gRPC with protobuf",
+        "基于 HTTP 的 GraphQL",
+        "使用 protobuf 的 gRPC",
         "JSON-RPC 2.0",
-        "REST with OpenAPI"
+        "使用 OpenAPI 的 REST"
       ],
       "correct": 2,
-      "explanation": ""
+      "explanation": "MCP 使用 JSON-RPC 2.0 作为其通信格式，支持通过 stdio、WebSocket 或流式 HTTP 传输。"
     },
     {
       "stage": "post",
-      "question": "Which metadata field signals a tool mutates state and should require human approval?",
+      "question": "哪个元数据字段表示工具会修改状态并应要求人工审批？",
       "options": [
         "readonly: false",
         "mutating: true",
@@ -36,31 +36,31 @@
         "requiresAuth: true"
       ],
       "correct": 2,
-      "explanation": ""
+      "explanation": "destructiveHint: true 告诉主机该工具执行破坏性操作，主机应显示一个审批界面供用户确认。"
     },
     {
       "stage": "post",
-      "question": "What is the 2025-06-18 transport that replaced the earlier SSE-only remote transport?",
+      "question": "2025-06-18 规范修订版中替代了早期纯 SSE 远程传输的传输方式是什么？",
       "options": [
         "WebTransport",
-        "Streamable HTTP",
-        "WebSocket-only",
-        "gRPC bidi"
+        "流式 HTTP（Streamable HTTP）",
+        "纯 WebSocket",
+        "gRPC 双向流"
       ],
       "correct": 1,
-      "explanation": ""
+      "explanation": "流式 HTTP（Streamable HTTP）在 2025-06-18 修订版中引入，使用 POST 处理请求，可选的 SSE 用于服务器发起的消息。"
     },
     {
       "stage": "post",
-      "question": "When should a tool be split into its own MCP server instead of staying inline?",
+      "question": "何时应将一个工具拆分为独立的 MCP 服务器，而不是保持内联？",
       "options": [
-        "When it is called fewer than 10 times per day",
-        "When it is called from two or more hosts and is read-only/cacheable",
-        "When it returns more than 1KB of data",
-        "Never; MCP is only for local dev"
+        "每天调用少于 10 次时",
+        "被两个及以上主机调用，且是只读/可缓存的",
+        "返回超过 1KB 数据时",
+        "从不；MCP 仅用于本地开发"
       ],
       "correct": 1,
-      "explanation": ""
+      "explanation": "经验法则：如果一个工具是只读的、可缓存的，并且被两个或以上主机调用，就将其发布为 MCP 服务器。一次性内联逻辑保留为本地函数。"
     }
   ]
 }

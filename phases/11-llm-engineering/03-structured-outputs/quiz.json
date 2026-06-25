@@ -1,37 +1,37 @@
 [
   {
-    "question": "Why is getting structured JSON output from LLMs challenging?",
-    "options": ["LLMs can't generate JSON", "LLMs generate free-form text token by token and can produce invalid JSON (missing brackets, wrong types, extra text) at any point", "JSON is too complex for LLMs", "LLMs only output plain text"],
+    "question": "为什么从 LLM 获取结构化 JSON 输出很困难？",
+    "options": ["LLM 无法生成 JSON", "LLM 逐 token 生成自由文本，并且在任何时候都可能产生无效 JSON（缺少括号、类型错误、多余文本）", "JSON 对 LLM 来说太复杂了", "LLM 只输出纯文本"],
     "correct": 1,
-    "explanation": "LLMs generate tokens autoregressively. They might add a trailing comma, forget a closing bracket, include markdown formatting around JSON, or hallucinate extra fields. Each token is independent, so structural validity isn't guaranteed.",
+    "explanation": "LLM 是自回归地生成 token。它们可能添加多余的逗号、忘记闭合括号、在 JSON 周围包含 markdown 格式，或幻觉出额外的字段。每个 token 是独立的，因此结构有效性无法保证。",
     "stage": "pre"
   },
   {
-    "question": "What is constrained decoding?",
-    "options": ["Limiting the model's vocabulary size", "Restricting which tokens the model can generate at each step to ensure the output conforms to a grammar or schema", "Using a smaller model", "Compressing the output"],
+    "question": "什么是约束解码（constrained decoding）？",
+    "options": ["限制模型的词汇量", "在每一步限制模型可生成的 token，以确保输出符合语法或 schema", "使用更小的模型", "压缩输出"],
     "correct": 1,
-    "explanation": "Constrained decoding masks out invalid tokens at each generation step. After an opening brace, only valid JSON keys are allowed. After a colon, only valid value tokens. This guarantees structural validity at the token level.",
+    "explanation": "约束解码在每个生成步骤屏蔽无效 token。在左大括号之后，只允许有效的 JSON 键。在冒号之后，只允许有效的值 token。这在 token 级别保证了结构有效性。",
     "stage": "pre"
   },
   {
-    "question": "What is the benefit of using Pydantic models for LLM output validation?",
-    "options": ["They make API calls faster", "They define typed schemas that automatically validate, parse, and reject malformed LLM outputs with clear error messages", "They reduce token usage", "They improve model accuracy"],
+    "question": "使用 Pydantic 模型进行 LLM 输出验证有什么好处？",
+    "options": ["它们使 API 调用更快", "它们定义类型化的 schema，自动验证、解析并拒绝格式错误的 LLM 输出，附带清晰的错误消息", "它们减少了 token 使用", "它们提高了模型准确率"],
     "correct": 1,
-    "explanation": "Pydantic enforces types, required fields, value constraints, and nested structures. When the LLM produces invalid output, Pydantic gives specific error messages that can be fed back to the model for self-correction.",
+    "explanation": "Pydantic 强制类型、必需字段、值约束和嵌套结构。当 LLM 产生无效输出时，Pydantic 给出具体的错误消息，可以反馈给模型进行自我修正。",
     "stage": "post"
   },
   {
-    "question": "What should you do when the LLM returns invalid JSON despite instructions?",
-    "options": ["Switch to a different model", "Implement a retry loop that sends the validation error back to the model as context for a corrected attempt", "Manually fix the JSON", "Increase the temperature"],
+    "question": "当 LLM 返回无效 JSON（尽管有指令）时，你应该怎么做？",
+    "options": ["切换到另一个模型", "实现一个重试循环，将验证错误作为上下文发回模型进行修正尝试", "手动修复 JSON", "提高温度"],
     "correct": 1,
-    "explanation": "A retry loop with error feedback works well: parse the output, catch validation errors, send the error message back as context ('Your output had this error: ... Please fix it'). Most models self-correct on the second attempt.",
+    "explanation": "带有错误反馈的重试循环效果很好：解析输出，捕获验证错误，将错误消息作为上下文发回（'你的输出有此错误：... 请修正'）。大多数模型在第二次尝试时能自我修正。",
     "stage": "post"
   },
   {
-    "question": "When should you use the API's native JSON mode vs prompt-based JSON extraction?",
-    "options": ["Always use native JSON mode", "Use native mode for guaranteed structure; use prompt-based for complex extraction where you need the model to reason about what to extract", "Always use prompt-based extraction", "They produce identical results"],
+    "question": "何时应该使用 API 的原生 JSON 模式而非基于提示的 JSON 提取？",
+    "options": ["始终使用原生 JSON 模式", "当需要保证结构时使用原生模式；当需要模型推理提取内容时使用基于提示的方式", "始终使用基于提示的提取", "它们产生完全相同的结果"],
     "correct": 1,
-    "explanation": "Native JSON mode (OpenAI's response_format, Anthropic's tool_use) guarantees valid JSON structure. Prompt-based extraction is more flexible for complex reasoning about which fields to populate. Use native mode when structure matters most.",
+    "explanation": "原生 JSON 模式（OpenAI 的 response_format、Anthropic 的 tool_use）保证有效的 JSON 结构。基于提示的提取在需要复杂推理哪些字段应填充时更灵活。当结构最重要时使用原生模式。",
     "stage": "post"
   }
 ]

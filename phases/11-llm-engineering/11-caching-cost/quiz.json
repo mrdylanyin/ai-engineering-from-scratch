@@ -1,37 +1,37 @@
 [
   {
-    "question": "Why do AI startups often fail from cost issues rather than model quality?",
-    "options": ["Models are always good enough", "Per-call costs compound rapidly: 10K users making 10 calls/day costs $250/day in tokens before charging a single dollar", "Cost optimization is easy", "API providers offer unlimited free tiers"],
+    "question": "为什么 AI 初创公司经常因成本问题而非模型质量而失败？",
+    "options": ["模型总是足够好", "每次调用成本迅速叠加：1 万用户每天调用 10 次，在收取任何费用之前，仅 token 就花费 $250/天", "成本优化很容易", "API 厂商提供无限免费套餐"],
     "correct": 1,
-    "explanation": "LLM API costs scale linearly with usage. A feature that costs $0.003 per call seems cheap until it's called 100K times/day ($300/day, $9K/month). Without cost optimization, many AI products are unprofitable at scale.",
+    "explanation": "LLM API 成本随使用线性增长。每次调用 $0.003 的功能看起来便宜，直到它每天被调用 100K 次（$300/天，$9K/月）。没有成本优化，许多 AI 产品在规模上无利可图。",
     "stage": "pre"
   },
   {
-    "question": "What is semantic caching for LLM applications?",
-    "options": ["Caching model weights", "Storing responses for previous queries and serving cached responses when a new query is semantically similar (not just exactly matching)", "Caching embeddings only", "Pre-generating all possible responses"],
+    "question": "什么是 LLM 应用的语义缓存？",
+    "options": ["缓存模型权重", "存储先前查询的响应，并在新查询语义相似（不仅是精确匹配）时提供缓存响应", "仅缓存嵌入", "预先生成所有可能的响应"],
     "correct": 1,
-    "explanation": "Exact-match caching only helps with identical queries. Semantic caching embeds queries and serves cached responses when cosine similarity exceeds a threshold. 'What's the weather in NYC?' matches 'NYC weather today?'.",
+    "explanation": "精确匹配缓存只对相同查询有帮助。语义缓存嵌入查询，在余弦相似度超过阈值时提供缓存响应。'纽约天气如何？'可以匹配'NYC 今天天气？'。",
     "stage": "pre"
   },
   {
-    "question": "What is model routing as a cost optimization strategy?",
-    "options": ["Load balancing across servers", "Sending simple queries to cheap/fast models and complex queries to expensive/powerful models based on query classification", "Routing between different API providers", "Caching responses from multiple models"],
+    "question": "什么是作为成本优化策略的模型路由？",
+    "options": ["跨服务器负载均衡", "根据查询分类，将简单查询发送到便宜/快速模型，将复杂查询发送到昂贵/强大模型", "在不同 API 厂商之间路由", "缓存来自多个模型的响应"],
     "correct": 1,
-    "explanation": "Not every query needs GPT-4. A classifier routes simple questions (FAQ, greetings) to a cheap model (GPT-3.5, Haiku) and complex questions (reasoning, analysis) to an expensive model. This can cut costs 50-80%.",
+    "explanation": "并非每个查询都需要 GPT-4。分类器将简单问题（FAQ、问候）路由到便宜模型（GPT-3.5、Haiku），将复杂问题（推理、分析）路由到昂贵模型。这可以降低 50-80% 的成本。",
     "stage": "post"
   },
   {
-    "question": "What is prompt compression and how does it reduce costs?",
-    "options": ["Making prompts shorter by removing words", "Removing redundant tokens, summarizing long contexts, and eliminating boilerplate to reduce input token count while preserving essential information", "Compressing prompts with gzip", "Using shorter variable names"],
+    "question": "什么是提示词压缩，它如何降低成本？",
+    "options": ["通过删除词使提示词变短", "移除冗余 token、精简长上下文、消除样板文本以减少输入 token 数量，同时保留关键信息", "用 gzip 压缩提示词", "使用更短的变量名"],
     "correct": 1,
-    "explanation": "Input tokens dominate cost in RAG applications (large retrieved contexts). Prompt compression removes filler words, summarizes verbose passages, and trims low-relevance chunks to reduce token count without losing key information.",
+    "explanation": "在 RAG 应用中，输入 token 占据成本主导地位（大量检索上下文）。提示词压缩移除填充词、精简冗长段落、修剪低相关性片段，以减少 token 数量而不丢失关键信息。",
     "stage": "post"
   },
   {
-    "question": "What is prefix caching and which provider feature enables it?",
-    "options": ["Caching the first word of each response", "Reusing KV-cache computation for shared prompt prefixes (system prompt + tool definitions), reducing latency and cost for repeated patterns", "Caching DNS lookups", "Browser caching of API responses"],
+    "question": "什么是前缀缓存，哪个厂商特性支持它？",
+    "options": ["缓存每个响应的第一个词", "复用共享提示词前缀（系统提示词 + 工具定义）的 KV 缓存计算，减少重复模式的延迟和成本", "缓存 DNS 查找", "浏览器缓存 API 响应"],
     "correct": 1,
-    "explanation": "If your system prompt + tool definitions are 5000 tokens and identical across requests, prefix caching computes the KV-cache once and reuses it. Anthropic's prompt caching and OpenAI's cached tokens both support this.",
+    "explanation": "如果你的系统提示词 + 工具定义是 5000 token 且在每次请求中相同，前缀缓存计算 KV 缓存一次并复用它。Anthropic 的提示词缓存和 OpenAI 的缓存 token 都支持此功能。",
     "stage": "post"
   }
 ]

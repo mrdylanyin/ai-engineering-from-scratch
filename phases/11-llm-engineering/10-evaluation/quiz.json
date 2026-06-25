@@ -1,37 +1,37 @@
 [
   {
-    "question": "Why is manually reading a few LLM outputs not a reliable evaluation method?",
-    "options": ["It takes too long", "Small samples miss failure modes that only appear at scale, and human judgment is inconsistent across reviewers and sessions", "Manual review is too expensive", "LLM outputs are always correct"],
+    "question": "为什么人工阅读几个 LLM 输出不是可靠的评估方法？",
+    "options": ["太花时间", "小样本会遗漏只有在大规模下才会出现的失败模式，而且人类判断在不同审查者和不同时段之间不一致", "人工审查太贵了", "LLM 输出总是正确的"],
     "correct": 1,
-    "explanation": "Reading 10 outputs shows you 10 points in a distribution. A prompt change might improve 90% of outputs but break 10% of edge cases. Without systematic evaluation, you'll miss the regression until users report it.",
+    "explanation": "阅读 10 个输出只展示了分布中的 10 个点。一次提示词更改可能改进 90% 的输出，但破坏 10% 的边界案例。没有系统化的评估，你会错过退化，直到用户报告。",
     "stage": "pre"
   },
   {
-    "question": "What is regression testing in the context of LLM applications?",
-    "options": ["Testing linear regression models", "Running a fixed set of test cases after every change (prompt, model, parameters) to ensure quality hasn't degraded", "Testing on the training data", "Measuring model loss during training"],
+    "question": "在 LLM 应用上下文中，什么是回归测试？",
+    "options": ["测试线性回归模型", "在每次更改（提示词、模型、参数）后运行一组固定的测试用例，以确保质量没有退化", "在训练数据上测试", "在训练期间测量模型损失"],
     "correct": 1,
-    "explanation": "Every prompt change, model swap, or temperature tweak changes the output distribution. Regression tests catch cases where a change that improves one area silently degrades another.",
+    "explanation": "每次提示词更改、模型切换或温度参数调整都会改变输出分布。回归测试捕获那些一处改进却悄悄让另一处退化的情况。",
     "stage": "pre"
   },
   {
-    "question": "What is the LLM-as-judge evaluation approach?",
-    "options": ["Having the model evaluate its own training loss", "Using a strong LLM to score outputs against rubrics, replacing expensive human evaluation while scaling to thousands of test cases", "Using the model's confidence scores", "Comparing two models' parameter counts"],
+    "question": "什么是 LLM 作评判者（LLM-as-Judge）的评估方法？",
+    "options": ["让模型评估自己的训练损失", "使用一个强大的 LLM 根据评分标准对输出打分，替代昂贵的人类评估，同时可扩展到数千个测试用例", "使用模型的置信度分数", "比较两个模型的参数量"],
     "correct": 1,
-    "explanation": "LLM-as-judge sends (input, output, rubric) to a strong model (e.g., GPT-4) which scores the output. It's cheaper and faster than human evaluation, though it has known biases (e.g., preferring verbose responses).",
+    "explanation": "LLM 作评判者将（输入、输出、评分标准）发送给一个强大的模型（如 GPT-4），由其打分。它比人工评估更便宜、更快，但它有已知偏差（如偏好冗长的回答）。",
     "stage": "post"
   },
   {
-    "question": "What makes a good evaluation dataset for an LLM application?",
-    "options": ["As many examples as possible", "Diverse inputs covering common cases, edge cases, adversarial inputs, and expected outputs with clear rubrics", "Only the hardest examples", "Random samples from the internet"],
+    "question": "什么样的评估数据集对于 LLM 应用是好的？",
+    "options": ["尽可能多的示例", "涵盖常见情况、边界案例、对抗性输入和具有明确评分标准的预期输出的多样化输入", "只有最难的示例", "从互联网随机采样"],
     "correct": 1,
-    "explanation": "A good eval set covers the distribution: happy path cases, edge cases (empty input, very long input), adversarial inputs (prompt injection), and ambiguous queries. Each example has a clear expected output or scoring rubric.",
+    "explanation": "一个好的评估集覆盖分布：正常路径用例、边界案例（空输入、超长输入）、对抗性输入（提示注入）和模糊查询。每个示例都有明确的预期输出或评分标准。",
     "stage": "post"
   },
   {
-    "question": "How should you handle non-deterministic LLM outputs in evaluation?",
-    "options": ["Set temperature to 0 for all evaluations", "Run each test case multiple times and use aggregate metrics (pass rate, average score) to account for output variance", "Non-determinism doesn't affect evaluation", "Only evaluate the first output"],
+    "question": "在评估中应如何处理非确定性的 LLM 输出？",
+    "options": ["将所有评估的温度设为 0", "每个测试用例运行多次，使用聚合指标（通过率、平均分）来考虑输出的方差", "非确定性不影响评估", "只评估第一次输出"],
     "correct": 1,
-    "explanation": "Even at temperature 0, some providers introduce sampling variation. Running each test 3-5 times and measuring pass rate or average score gives a more reliable picture than a single run that might hit a lucky/unlucky sample.",
+    "explanation": "即使在温度 0 下，一些厂商也会引入采样变化。每个测试运行 3-5 次并测量通过率或平均分，比单次运行（可能恰好命中幸运/不幸样本）提供更可靠的结果。",
     "stage": "post"
   }
 ]
